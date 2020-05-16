@@ -1,13 +1,13 @@
 import React from "react"
+import { graphql } from 'gatsby';
 import { css } from "@emotion/core"
-import { Link, graphql } from "gatsby"
 import { rhythm } from "../utils/typography"
 import Layout from "../components/layout"
 
 export default function Home({ data }) {
   return (
     <Layout>
-      <div>
+    <div>
         <h1
           css={css`
             display: inline-block;
@@ -19,29 +19,21 @@ export default function Home({ data }) {
         <h4>{data.allMarkdownRemark.totalCount} Posts</h4>
         {data.allMarkdownRemark.edges.map(({ node }) => (
           <div key={node.id}>
-            <Link
-              to={node.fields.slug}
+            <h3
               css={css`
-                text-decoration: none;
-                color: inherit;
+                margin-bottom: ${rhythm(1 / 4)};
               `}
             >
-              <h3
+              {node.frontmatter.title}{" "}
+              <span
                 css={css`
-                  margin-bottom: ${rhythm(1 / 4)};
+                  color: #bbb;
                 `}
               >
-                {node.frontmatter.title}{" "}
-                <span
-                  css={css`
-                    color: #555;
-                  `}
-                >
-                  — {node.frontmatter.date}
-                </span>
-              </h3>
-              <p>{node.excerpt}</p>
-            </Link>
+                — {node.frontmatter.date}
+              </span>
+            </h3>
+            <p>{node.excerpt}</p>
           </div>
         ))}
       </div>
@@ -52,7 +44,6 @@ export default function Home({ data }) {
 export const query = graphql`
   query {
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
-      totalCount
       edges {
         node {
           id
@@ -60,12 +51,9 @@ export const query = graphql`
             title
             date(formatString: "DD MMMM, YYYY")
           }
-          fields {
-            slug
-          }
           excerpt
         }
       }
     }
   }
-`
+`;
